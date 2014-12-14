@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html ng-app="payrollApp">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.css">
+  </head>
+
+  <body>
+    <div class="container">
+    	<br/>
+<pre>employee John Kevin box 
+salary 9000 box output 
+
+philhealth - employee 112.5 
+sss salary * 10% - 900 
+deductions = sss + philhealth 
+gross = salary 
+net = salary - deductions 
+
+Range                       Employee Share 
+1 8,999.99** and below        100.00 
+2 9,000.00 - 9,999.99         112.50 
+3 10,000.00 - 10,999.99       125.00 
+4 11,000.00 - 11,999.99       137.50 
+5 12,000.00 - and up          150.00 </pre>  
+<br/>
+<div ng-controller="addCtrl">
+ 	<form role="form" >
+        <div class="form-group">
+          <label for="EmployeeName">Employee Name:</label>
+          <input type="text" class="form-control" id="EmployeeName" placeholder="Enter Employee Name" ng-model="inempName" >
+        </div>
+        <div class="form-group">
+          <label for="Salary">Salary:</label>
+          <input type="text" class="form-control" id="Salary" placeholder="Enter Salary" ng-model="inempSalary">
+        </div>
+        
+        <button type="submit" class="btn btn-default" ng-click="computeClck()">Compute</button>
+    </form>
+
+      <div class="table-responsive">          
+	      <table class="table">
+	        <thead>
+	          <tr>
+	            <th> Name </th>
+      				<th> Philhealth </th>
+      				<th> SSS </th>
+      				<th> Deductions </th>
+      				<th> Gross </th>
+      				<th> Net </th>
+	          </tr>
+	        </thead>
+	        <tbody >
+	          <tr ng-repeat="emp in arrEmps">
+	           	<td> {{emp.eName}} </td>
+      				<td> {{emp.ePhil | currency:'Php '}} </td>
+      				<td> {{emp.eSSS | currency:'Php '}} </td>
+      				<td> {{emp.eDeduction | currency:'Php '}} </td>
+      				<td> {{emp.eGross | currency:'Php '}}</td>
+      				<td> {{emp.eNet | currency:'Php '}} </td>
+	          </tr>
+	        </tbody>
+	      </table>
+      </div>
+</div>      
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular.js"></script>
+    <script>
+    	angular.module('payrollApp', [])
+      		.controller('addCtrl', function ($scope){
+            
+            $scope.arrEmps = [];
+
+            $scope.computeClck = function (){
+              var empAmtSalary = $scope.inempSalary,
+                  empShare = '',
+                  empPhil = '',
+                  empSSS ='',
+                  empGross = '',
+                  empNet = '',
+                  empDeduction = '',
+                  empName = $scope.inempName;
+
+              if (empAmtSalary >= 12000){
+                empShare = 150.00;
+              } else if (empAmtSalary >= 11000) {
+                empShare = 137.50;
+              } else if (empAmtSalary >= 10000) {
+                empShare = 125.00;
+              } else if (empAmtSalary >= 9000) {
+                empShare = 112.50;
+              } else {
+                empShare = 100.00;
+              }
+
+              empPhil = empShare;
+              empSSS = empAmtSalary * .1;
+              empDeduction = empPhil + empSSS;
+              empGross = empAmtSalary;
+              empNet = empAmtSalary - empDeduction;
+
+              $scope.arrEmps.push({
+                eName:        empName,
+                ePhil:        empPhil,
+                eSSS:         empSSS,
+                eDeduction:   empDeduction,
+                eGross:       empGross,
+                eNet:         empNet
+              });
+            }
+    		});
+
+    </script>
+     
+  </body>
+
+</html>
